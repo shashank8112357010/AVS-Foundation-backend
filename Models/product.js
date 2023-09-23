@@ -27,7 +27,7 @@ const productSchema = Schema({
     },
     image: {
         type: String,
-        required:true,
+        required: true,
     },
     details: {
         type: String,
@@ -37,8 +37,12 @@ const productSchema = Schema({
         type: String,
         required: true
     },
+    categoryId: {
+        type : String,
+        required: true
+    }
 
-},{ timestamps: true });
+}, { timestamps: true });
 
 
 module.exports = productModel = mongoose.model('products', productSchema);

@@ -15,7 +15,6 @@ var QRCode = require('qrcode')
 
 // user api's 
 
-
 const registerUser = async (req, res) => {
     try {
         const { otp, phone, password, referral } = req.body;
@@ -86,7 +85,6 @@ const forgotpassword = async (req, res) => {
         return res.status(500).json(error(err.message, 500))
     }
 }
-
 
 const getreferrallink = async (req, res) => {
     try {

@@ -38,5 +38,18 @@ const getProductsById = async (req, res) => {
         return res.status(500).json(error(err.message, 500))
     }
 }
+const getProductsBycategoryId = async (req, res) => {
+    try {
+        const {id} = req.params;
+        if(!id) return res.status(422).json(error("Category Id is required"))
+        const Products =await productModel.find({categoryId : id});
+        return res.status(200).json(success('fetched successfully by category id ' , Products , 200 ))
+    }
+    catch (err) {
+        return res.status(500).json(error(err.message, 500))
+    }
+}
 
-module.exports ={createProduct ,getProducts , getProductsById}
+
+
+module.exports ={createProduct ,getProducts , getProductsById ,getProductsBycategoryId}

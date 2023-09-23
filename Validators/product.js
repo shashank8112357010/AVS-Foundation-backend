@@ -1,5 +1,7 @@
 const { body } = require("express-validator");
 const productModel = require("../Models/product");
+const categoryModel = require("../Models/category");
+
 
 
 const createProductValidation = [
@@ -49,6 +51,18 @@ const createProductValidation = [
         .withMessage("Please enter limited time")
         .isString()
         .withMessage("Please enter a valid limited time"),
+        body("categoryId")
+        .notEmpty()
+        .withMessage("Please provide category Id").custom((value)=>{
+            return categoryModel.find({
+                _id: value,
+            }).then((category) => {
+                if (category.length === 0) {
+                    return Promise.reject("category id does't exists!");
+                }
+                return true;
+            });
+        })
 ];
 
 module.exports = {
