@@ -49,18 +49,17 @@ const verifyPhoneNumber = async (req, res) => {
 
 const loginUser = async (req, res) => {
     try {
-        const { phone, password } = req.body
+        const { phone, password } = req.body;
         // if(!phone || phone.length !=10) return res.status(422).json(validateRes("Phone enter valid phone number "));
         const user = await userModel.findOne({ phone });
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
-        if (!isPasswordCorrect)
-            return res.status(400).json(error("Wrong Password Entered", 400));
+        if (!isPasswordCorrect)return res.status(400).json(error("Wrong Password Entered", 400));
         const payload = { _id: user._id, isAdmin: user.isAdmin, phone: user.phone };
         console.log(process.env.JWT_SECRET_KEY);
         const jwt_token = await jwt.sign(payload, process.env.JWT_SECRET_KEY);
         console.log(user);
         let userPayload = {
-           phone :  user.phone,
+            phone: user.phone,
             token: jwt_token,
         };
         return res.status(200).json(success("Logged in successfully", userPayload, 200));
@@ -104,21 +103,49 @@ const getreferrallink = async (req, res) => {
 const getQrCode = async (req, res) => {
     try {
         const { phone } = req.params;
-        
+
         if (!phone) return res.status(422).json(validateRes("phone number is required"))
         const link = await referralModel.find({ phone });
         console.log(link[0]?.referral);
         QRCode.toDataURL(link[0]?.referral, function (err, url) {
-            console.log("url===>",url);
+            console.log("url===>", url);
         })
         QRCode.toString(link[0]?.referral, { type: 'terminal' }, function (err, url) {
             console.log(url);
-            return res.status(200).json(success("QR fetched successfully" , [url] , 200 ))
+            return res.status(200).json(success("QR fetched successfully", [url], 200))
         })
 
-       
+
     } catch (err) {
         return res.status(500).json(error(err.message, 200))
+    }
+}
+
+const changepassword = async (req, res) => {
+    try {
+        const { oldpassword, newpassword, confirmnewpassword, phone } = req.body;
+        const [user] = await userModel.find({ phone });
+        console.log(user);
+        const isoldPasswordCorrect = await bcrypt.compare(oldpassword, user.password);
+        console.log(isoldPasswordCorrect);
+        if (!isoldPasswordCorrect) return res.status(422).json(error("Old password is incorrect", 422))
+        else {
+            if (newpassword != confirmnewpassword) return res.status(422).json(error("password and confirm password does't match"));
+            else {
+                const salt = await bcrypt.genSalt(10);
+                const securedPassword = await bcrypt.hash(newpassword, salt);
+                await userModel.findOneAndUpdate({ phone }, { password: securedPassword }, { new: true });
+                return res.status(201).json(success('Password has been changed', [], 201))
+
+            }
+
+        }
+
+
+
+    }
+    catch (err) {
+        return res.status(500).json(error(err.message, 500))
     }
 }
 
@@ -131,7 +158,8 @@ module.exports = {
     loginUser,
     forgotpassword,
     getreferrallink,
-    getQrCode
+    getQrCode,
+    changepassword
 }
 
 
