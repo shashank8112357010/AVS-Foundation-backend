@@ -6,6 +6,7 @@ const dataBaseConnect = require('./Helper/db');
 const PORT = process.env.PORT || 8000;
 const route = require('./Routes/index')
 
+app.use('/', express.static('/build'))
 
 //with use of this our appliction will be abel to accept json inputs
 app.use(express.json({ limit: 52428800 })); //this is 50mb in bytes

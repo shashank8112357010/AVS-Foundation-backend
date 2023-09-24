@@ -7,10 +7,8 @@ const categoryModel = require('../Models/category')
 
 const createCategory = async (req, res) => {
     try {
-          
         const newCategory = await new categoryModel({...req.body});
         newCategory.save()
-        console.log("hey" , newCategory);
         return res.status(201).json(success(' Category Created successfully' , newCategory , 201 ))
     }
     catch (err) {
