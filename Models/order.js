@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const orderSchema = new mongoose.Schema({
     phone: {
         type: String,
-    
     },
     productId: [String],
 });
@@ -21,4 +20,4 @@ const orderSchema = new mongoose.Schema({
 //     }
 //     next();
 // });
-module.exports = orderModel =  mongoose.model("orders", orderSchema);
+module.exports = orderModel = mongoose.model("orders", orderSchema);

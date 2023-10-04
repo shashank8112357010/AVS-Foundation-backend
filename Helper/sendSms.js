@@ -10,7 +10,7 @@ const sendSms = (number, otp) => {
                 from: '+12568417085',
                 to: `+91${number}`
             })
-            .then(message =>console.log(message.sid))
+            .then(message =>console.log(  "SMS API ==========>", message.sid))
             .done();
     }
     catch (err) {
